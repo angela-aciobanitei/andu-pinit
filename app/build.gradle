@@ -34,28 +34,28 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
     // Room
-    implementation 'androidx.room:room-runtime:2.2.1'
+    implementation 'androidx.room:room-runtime:2.2.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    annotationProcessor 'androidx.room:room-compiler:2.2.1'
-    testImplementation 'androidx.room:room-testing:2.2.1'
+    annotationProcessor 'androidx.room:room-compiler:2.2.3'
+    testImplementation 'androidx.room:room-testing:2.2.3'
 
     // LiveData & ViewModel
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime:2.1.0'
-    implementation 'androidx.lifecycle:lifecycle-common-java8:2.1.0'
-    annotationProcessor 'androidx.lifecycle:lifecycle-common-java8:2.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
+    annotationProcessor 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
     implementation 'androidx.arch.core:core-runtime:2.1.0'
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
 
     // Navigation Component
-    implementation 'androidx.navigation:navigation-fragment:2.2.0-rc01'
-    implementation 'androidx.navigation:navigation-ui:2.2.0-rc01'
+    implementation 'androidx.navigation:navigation-fragment:2.2.0'
+    implementation 'androidx.navigation:navigation-ui:2.2.0'
 
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
