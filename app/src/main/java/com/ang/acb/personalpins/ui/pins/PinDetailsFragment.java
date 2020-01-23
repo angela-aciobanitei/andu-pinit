@@ -143,7 +143,7 @@ public class PinDetailsFragment extends Fragment {
     }
 
     private void initViewModel() {
-        pinDetailsViewModel = ViewModelProviders.of(this, viewModelFactory)
+        pinDetailsViewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(PinDetailsViewModel.class);
         pinDetailsViewModel.setPinId(pinId);
     }

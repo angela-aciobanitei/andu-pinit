@@ -217,12 +217,14 @@ public class PinEditFragment extends Fragment {
         if (activity != null) {
             InputMethodManager inputMethodManager = (InputMethodManager)
                     activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(windowToken, 0);
+            if (inputMethodManager != null) {
+                inputMethodManager.hideSoftInputFromWindow(windowToken, 0);
+            }
         }
     }
 
     private void initViewModel() {
-        pinsViewModel = ViewModelProviders.of(this, viewModelFactory)
+        pinsViewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(PinsViewModel.class);
     }
 

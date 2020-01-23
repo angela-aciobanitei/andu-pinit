@@ -15,11 +15,7 @@
         <action
             android:id="@+id/action_board_list_to_board_details"
             app:destination="@id/board_details"
-            app:popUpTo="@+id/boards">
-            <argument
-                android:name="boardId"
-                app:argType="long" />
-        </action>
+            app:popUpTo="@+id/boards"/>
     </fragment>
 
     <fragment
@@ -30,23 +26,12 @@
         <action
             android:id="@+id/action_board_details_to_pin_details"
             app:destination="@id/pin_details"
-            app:popUpTo="@+id/board_details">
-            <argument
-                android:name="pinId"
-                app:argType="long" />
-            <argument
-                android:name="isPhoto"
-                app:argType="boolean" />
-        </action>
-        <!-- Navigate from board details to pin select (and back/up) -->
+            app:popUpTo="@+id/board_details"/>
+        <!-- Navigate from board details to select pins (and back/up) -->
         <action
             android:id="@+id/action_board_details_to_pin_select"
             app:destination="@id/select_pins"
-            app:popUpTo="@+id/board_details">
-            <argument
-                android:name="boardId"
-                app:argType="long" />
-        </action>
+            app:popUpTo="@+id/board_details"/>
     </fragment>
 
     <fragment
@@ -64,11 +49,7 @@
         <action
             android:id="@+id/action_pin_details_to_comments"
             app:destination="@id/comments"
-            app:popUpTo="@+id/pin_details">
-            <argument
-                android:name="pinId"
-                app:argType="long" />
-        </action>
+            app:popUpTo="@+id/pin_details"/>
     </fragment>
 
     <fragment
@@ -87,14 +68,7 @@
         <action
             android:id="@+id/action_pin_list_to_pin_details"
             app:destination="@id/pin_details"
-            app:popUpTo="@+id/pins">
-            <argument
-                android:name="pinId"
-                app:argType="long" />
-            <argument
-                android:name="isPhoto"
-                app:argType="boolean" />
-        </action>
+            app:popUpTo="@+id/pins"/>
     </fragment>
 
     <dialog
@@ -105,14 +79,7 @@
         <action
             android:id="@+id/action_create_pin_dialog_to_pin_edit"
             app:destination="@id/pin_edit"
-            app:popUpTo="@+id/pins">
-            <argument
-                android:name="pinUriString"
-                app:argType="string" />
-            <argument
-                android:name="isVideo"
-                app:argType="boolean" />
-        </action>
+            app:popUpTo="@+id/pins"/>
     </dialog>
 
     <fragment
@@ -131,14 +98,7 @@
         <action
             android:id="@+id/action_favorite_pins_to_pin_details"
             app:destination="@id/pin_details"
-            app:popUpTo="@+id/favorites">
-            <argument
-                android:name="pinId"
-                app:argType="long" />
-            <argument
-                android:name="isPhoto"
-                app:argType="boolean" />
-        </action>
+            app:popUpTo="@+id/favorites"/>
     </fragment>
 
 </navigation>

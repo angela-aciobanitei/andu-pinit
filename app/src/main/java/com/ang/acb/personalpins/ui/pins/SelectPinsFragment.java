@@ -83,9 +83,9 @@ public class SelectPinsFragment extends Fragment {
     }
 
     private void initViewModels() {
-        pinsViewModel = ViewModelProviders.of(this, viewModelFactory)
+        pinsViewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(PinsViewModel.class);
-        boardDetailsViewModel = ViewModelProviders.of(this, viewModelFactory)
+        boardDetailsViewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(BoardDetailsViewModel.class);
         boardDetailsViewModel.setBoardId(boardId);
     }

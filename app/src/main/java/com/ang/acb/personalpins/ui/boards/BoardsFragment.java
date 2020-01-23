@@ -74,7 +74,11 @@ public class BoardsFragment extends Fragment {
     }
 
     private void initViewModel() {
-        boardsViewModel = ViewModelProviders.of(getHostActivity(), viewModelFactory)
+        // ViewModelProviders.of() has been deprecated. You can pass a Fragment or
+        // FragmentActivity to the new ViewModelProvider(ViewModelStoreOwner) constructor
+        // to achieve the same functionality.
+        // See: https://developer.android.com/jetpack/androidx/releases/lifecycle#2.2.0-alpha03
+        boardsViewModel = new ViewModelProvider(getHostActivity(), viewModelFactory)
                 .get(BoardsViewModel.class);
     }
 

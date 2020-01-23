@@ -72,7 +72,7 @@ public class PinsFragment extends Fragment {
     }
 
     private void initViewModel() {
-        pinsViewModel = ViewModelProviders.of(this, viewModelFactory)
+        pinsViewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(PinsViewModel.class);
     }
 

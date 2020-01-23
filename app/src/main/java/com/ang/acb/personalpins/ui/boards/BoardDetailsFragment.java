@@ -95,7 +95,7 @@ public class BoardDetailsFragment extends Fragment {
     }
 
     private void initViewModel() {
-        boardDetailsViewModel = ViewModelProviders.of(this, viewModelFactory)
+        boardDetailsViewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(BoardDetailsViewModel.class);
         boardDetailsViewModel.setBoardId(boardId);
     }
