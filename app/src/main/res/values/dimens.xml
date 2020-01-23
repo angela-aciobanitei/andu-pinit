@@ -11,4 +11,8 @@
     <dimen name="grid_item_spacing">3dp</dimen>
     <dimen name="card_view_corner_radius">4dp</dimen>
     <dimen name="video_play_button_size">56dp</dimen>
+
+    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_min_width">180dp</dimen>
+    <dimen name="widget_min_height">250dp</dimen>
 </resources>

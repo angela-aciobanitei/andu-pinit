@@ -46,4 +46,9 @@
     <string name="pin_removed_from_favorites">Pin removed from favorites</string>
     <string name="no_favorites">No favorite pins yet</string>
     <string name="no_data">No data yet</string>
+    <string name="empty_widget">Empty Widget</string>
+    <string name="widget_text">Create widget and add it to the Home Screen</string>
+    <string name="pref_widget_key">pref_widget_key</string>
+    <string name="pref_title_key">pref_title_key</string>
+    <string name="create_widget">Create board widget</string>
 </resources>

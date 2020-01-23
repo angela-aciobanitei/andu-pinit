@@ -36,6 +36,13 @@ public interface BoardPinDao {
             "WHERE boardPin.boardId = :boardId")
     LiveData<List<Pin>> getPinsForBoard(final long boardId);
 
+    // For widget
+    @Query("SELECT id, pin_title, photo_uri, video_uri, is_favorite FROM pin " +
+            "INNER JOIN boardPin " +
+            "ON pin.id = boardPin.pinId " +
+            "WHERE boardPin.boardId = :boardId")
+    List<Pin> getPinsForBoardSync(final long boardId);
+
     @Query("SELECT id, board_title, photo_cover_uri FROM board " +
             "INNER JOIN boardPin " +
             "ON board.id = boardPin.boardId " +

@@ -1,6 +1,8 @@
 package com.ang.acb.personalpins.ui.boards;
 
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -15,6 +17,9 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,6 +29,8 @@ import com.ang.acb.personalpins.data.entity.Pin;
 import com.ang.acb.personalpins.databinding.FragmentBoardDetailsBinding;
 import com.ang.acb.personalpins.ui.common.MainActivity;
 import com.ang.acb.personalpins.ui.pins.PinsAdapter;
+import com.ang.acb.personalpins.ui.widget.BoardWidgetProvider;
+import com.ang.acb.personalpins.ui.widget.PreferencesUtils;
 import com.ang.acb.personalpins.utils.GridMarginDecoration;
 
 import org.jetbrains.annotations.NotNull;
@@ -63,6 +70,9 @@ public class BoardDetailsFragment extends Fragment {
         if (getArguments() != null) {
             boardId = getArguments().getLong(ARG_BOARD_ID);
         }
+
+        // Report that this fragment would like to populate the options menu.
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -154,5 +164,35 @@ public class BoardDetailsFragment extends Fragment {
 
     private MainActivity getHostActivity(){
         return  (MainActivity) getActivity();
+    }
+
+    public void addWidgetToHomeScreen(long boardId, String boardName) {
+        PreferencesUtils.setWidgetTitle(getContext(), boardName);
+        PreferencesUtils.setWidgetBoardId(getContext(), boardId);
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getContext());
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
+                new ComponentName(getHostActivity(), BoardWidgetProvider.class));
+
+        appWidgetManager.notifyAppWidgetViewDataChanged(
+                appWidgetIds, R.id.widget_pin_list_items);
+        BoardWidgetProvider.updateRecipeWidget(
+                getContext(), appWidgetManager, appWidgetIds);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.board_details_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_create_widget) {
+            addWidgetToHomeScreen(boardId, "Board Title");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
