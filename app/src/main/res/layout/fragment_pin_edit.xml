@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="isVideo" type="boolean" />
+        <variable name="isPhoto" type="boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +22,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/barrier1"
-            app:toggleVisibility="@{isVideo}"/>
+            app:toggleVisibility="@{!isPhoto}"/>
 
         <ImageView
             android:id="@+id/pin_edit_photo"
@@ -35,7 +35,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/barrier1"
-            app:toggleVisibility="@{!isVideo}"/>
+            app:toggleVisibility="@{isPhoto}"/>
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier1"

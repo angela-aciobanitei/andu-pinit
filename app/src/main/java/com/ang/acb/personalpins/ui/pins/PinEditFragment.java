@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import android.os.IBinder;
@@ -45,8 +44,6 @@ import dagger.android.support.AndroidSupportInjection;
 
 public class PinEditFragment extends Fragment {
 
-    public static final String ARG_PIN_URI = "ARG_PIN_URI";
-    public static final String ARG_PIN_IS_VIDEO = "ARG_PIN_IS_VIDEO";
     private static final String EXTRA_PLAYBACK_POSITION = "EXTRA_PLAYBACK_POSITION";
     private static final String EXTRA_SHOULD_PLAY = "EXTRA_SHOULD_PLAY";
 
@@ -54,7 +51,7 @@ public class PinEditFragment extends Fragment {
     private PinsViewModel pinsViewModel;
     private String pinTitle;
     private Uri pinUri;
-    private boolean isVideo;
+    private boolean isPhoto;
     private SimpleExoPlayer simpleExoPlayer;
     private boolean shouldPlayWhenReady;
     private long currentPlaybackPosition;
@@ -76,16 +73,18 @@ public class PinEditFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Extract arguments sent via Safe Args.
         if (getArguments() != null) {
-            pinUri = Uri.parse(getArguments().getString(ARG_PIN_URI));
-            isVideo = getArguments().getBoolean(ARG_PIN_IS_VIDEO);
+            String pinUriString = PinEditFragmentArgs.fromBundle(getArguments()).getPinUriString();
+            pinUri = Uri.parse(pinUriString);
+            isPhoto = PinEditFragmentArgs.fromBundle(getArguments()).getIsPhoto();
         }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment and get an instance of the binding class.
         binding = FragmentPinEditBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -121,9 +120,9 @@ public class PinEditFragment extends Fragment {
     }
 
     private void displayPhotoOrVideo() {
-        binding.setIsVideo(isVideo);
+        binding.setIsPhoto(isPhoto);
 
-        if (!isVideo) {
+        if (isPhoto) {
             binding.pinEditPhoto.setImageURI(pinUri);
         } else {
             initPlayer(pinUri);
@@ -232,7 +231,7 @@ public class PinEditFragment extends Fragment {
         binding.pinEditSaveBtn.setOnClickListener(view -> {
             if (pinTitle != null && !pinTitle.isEmpty()) {
                 // Save result into the database.
-                if(isVideo) pinsViewModel.createPin(new Pin(
+                if(!isPhoto) pinsViewModel.createPin(new Pin(
                             pinTitle, null, pinUri.toString(), false));
                 else pinsViewModel.createPin(new Pin(
                             pinTitle, pinUri.toString(), null, false));

@@ -53,9 +53,6 @@ import dagger.android.support.AndroidSupportInjection;
 
 public class PinDetailsFragment extends Fragment {
 
-    public static final String ARG_PIN_ID = "ARG_PIN_ID";
-    public static final String ARG_PIN_IS_PHOTO = "ARG_PIN_IS_PHOTO";
-
     private static final String EXTRA_PLAYBACK_POSITION = "EXTRA_PLAYBACK_POSITION";
     private static final String EXTRA_SHOULD_PLAY = "EXTRA_SHOULD_PLAY";
 
@@ -86,9 +83,10 @@ public class PinDetailsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Extract arguments sent via Safe Args.
         if (getArguments() != null) {
-            pinId = getArguments().getLong(ARG_PIN_ID);
-            isPhoto = getArguments().getBoolean(ARG_PIN_IS_PHOTO);
+            pinId = PinDetailsFragmentArgs.fromBundle(getArguments()).getPinId();
+            isPhoto = PinDetailsFragmentArgs.fromBundle(getArguments()).getIsPhoto();
         }
 
         if (isPhoto) {
@@ -350,11 +348,11 @@ public class PinDetailsFragment extends Fragment {
 
     private void viewComments() {
         binding.viewCommentsTv.setOnClickListener(view -> {
-            // Navigate to comments fragment and pass the pin ID as bundle arg.
-            Bundle args = new Bundle();
-            args.putLong(ARG_PIN_ID, pinId);
-            NavHostFragment.findNavController(PinDetailsFragment.this)
-                    .navigate(R.id.action_pin_details_to_comments, args);
+            // Navigate to comments fragment and pass the pin ID via Safe Args.
+            PinDetailsFragmentDirections.ActionPinDetailsToComments action =
+                    PinDetailsFragmentDirections.actionPinDetailsToComments();
+            action.setPinId(pinId);
+            NavHostFragment.findNavController(this).navigate(action);
         });
     }
 

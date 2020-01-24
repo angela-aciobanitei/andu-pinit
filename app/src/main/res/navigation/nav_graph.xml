@@ -29,9 +29,18 @@
             app:popUpTo="@+id/board_details"/>
         <!-- Navigate from board details to select pins (and back/up) -->
         <action
-            android:id="@+id/action_board_details_to_pin_select"
+            android:id="@+id/action_board_details_to_select_pins"
             app:destination="@id/select_pins"
             app:popUpTo="@+id/board_details"/>
+        <argument
+            android:name="boardId"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <argument
+            android:name="boardTitle"
+            app:argType="string"
+            android:defaultValue="Your Board" />
+
     </fragment>
 
     <fragment
@@ -39,6 +48,10 @@
         android:label="@string/pin_select"
         android:name="com.ang.acb.personalpins.ui.pins.SelectPinsFragment"
         tools:layout="@layout/fragment_pin_select">
+        <argument
+            android:name="boardId"
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
 
     <fragment
@@ -50,6 +63,14 @@
             android:id="@+id/action_pin_details_to_comments"
             app:destination="@id/comments"
             app:popUpTo="@+id/pin_details"/>
+        <argument
+            android:name="pinId"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <argument
+            android:name="isPhoto"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
     <fragment
@@ -57,6 +78,10 @@
         android:label="@string/comments"
         android:name="com.ang.acb.personalpins.ui.pins.CommentsFragment"
         tools:layout="@layout/fragment_comments">
+        <argument
+            android:name="pinId"
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
 
     <fragment
@@ -87,6 +112,15 @@
         android:label="@string/pin_edit"
         android:name="com.ang.acb.personalpins.ui.pins.PinEditFragment"
         tools:layout="@layout/fragment_pin_edit">
+        <argument
+            android:name="pinUriString"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+        <argument
+            android:name="isPhoto"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
     <fragment

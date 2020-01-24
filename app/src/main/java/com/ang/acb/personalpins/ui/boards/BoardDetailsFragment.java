@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.FragmentNavigator;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -39,9 +38,6 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 
-import static com.ang.acb.personalpins.ui.boards.BoardsFragment.ARG_BOARD_ID;
-import static com.ang.acb.personalpins.ui.pins.PinDetailsFragment.ARG_PIN_ID;
-import static com.ang.acb.personalpins.ui.pins.PinDetailsFragment.ARG_PIN_IS_PHOTO;
 
 public class BoardDetailsFragment extends Fragment {
 
@@ -49,6 +45,7 @@ public class BoardDetailsFragment extends Fragment {
     private BoardDetailsViewModel boardDetailsViewModel;
     private PinsAdapter pinsAdapter;
     private long boardId;
+    private String boardTitle;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -58,7 +55,7 @@ public class BoardDetailsFragment extends Fragment {
 
     @Override
     public void onAttach(@NotNull Context context) {
-        // When using Dagger for injecting Fragments, inject as early as possible.
+        // When using Dagger with Fragments, inject as early as possible.
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
     }
@@ -67,8 +64,10 @@ public class BoardDetailsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Extract arguments sent via Safe Args.
         if (getArguments() != null) {
-            boardId = getArguments().getLong(ARG_BOARD_ID);
+            boardId = BoardDetailsFragmentArgs.fromBundle(getArguments()).getBoardId();
+            boardTitle = BoardDetailsFragmentArgs.fromBundle(getArguments()).getBoardTitle();
         }
 
         // Report that this fragment would like to populate the options menu.
@@ -110,24 +109,22 @@ public class BoardDetailsFragment extends Fragment {
     }
 
     private void onPinClick(Pin pin, ImageView sharedImage) {
-        // On item click navigate to pin details fragment
-        Bundle args = new Bundle();
-        args.putLong(ARG_PIN_ID, pin.getId());
+        // On item click navigate to pin details fragment.
+        BoardDetailsFragmentDirections.ActionBoardDetailsToPinDetails action =
+                BoardDetailsFragmentDirections.actionBoardDetailsToPinDetails();
+        action.setPinId(pin.getId());
         if (pin.getPhotoUri() != null && sharedImage != null) {
-            // This is a photo pin
-            args.putBoolean(ARG_PIN_IS_PHOTO, true);
+            // This is a photo pin.
+            action.setIsPhoto(true);
             // Create the shared element transition extras.
             FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
                     .addSharedElement(sharedImage, sharedImage.getTransitionName())
                     .build();
-            NavHostFragment.findNavController(BoardDetailsFragment.this)
-                    .navigate(R.id.action_board_details_to_pin_details,
-                              args, null, extras);
+            NavHostFragment.findNavController(this).navigate(action, extras);
         } else {
             // This is a video pin, there are no shared element transition extras.
-            args.putBoolean(ARG_PIN_IS_PHOTO, false);
-            NavHostFragment.findNavController(BoardDetailsFragment.this)
-                    .navigate(R.id.action_board_details_to_pin_details, args);
+            action.setIsPhoto(false);
+            NavHostFragment.findNavController(this).navigate(action);
         }
     }
 
@@ -154,11 +151,11 @@ public class BoardDetailsFragment extends Fragment {
 
     private void onAddPins() {
         binding.addPinsButton.setOnClickListener(view -> {
-            // Navigate to pin select fragment and pass the board ID as bundle arg.
-            Bundle args = new Bundle();
-            args.putLong(ARG_BOARD_ID, boardId);
-            NavHostFragment.findNavController(BoardDetailsFragment.this)
-                    .navigate(R.id.action_board_details_to_pin_select, args);
+            // Navigate to select pins fragment and pass the board ID as bundle arg.
+            BoardDetailsFragmentDirections.ActionBoardDetailsToSelectPins action =
+                    BoardDetailsFragmentDirections.actionBoardDetailsToSelectPins();
+            action.setBoardId(boardId);
+            NavHostFragment.findNavController(this).navigate(action);
         });
     }
 
@@ -166,8 +163,8 @@ public class BoardDetailsFragment extends Fragment {
         return  (MainActivity) getActivity();
     }
 
-    public void addWidgetToHomeScreen(long boardId, String boardName) {
-        PreferencesUtils.setWidgetTitle(getContext(), boardName);
+    private void addWidgetToHomeScreen(long boardId, String boardTitle) {
+        PreferencesUtils.setWidgetTitle(getContext(), boardTitle);
         PreferencesUtils.setWidgetBoardId(getContext(), boardId);
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getContext());
@@ -190,7 +187,7 @@ public class BoardDetailsFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_create_widget) {
-            addWidgetToHomeScreen(boardId, "Board Title");
+            addWidgetToHomeScreen(boardId, boardTitle);
             return true;
         }
         return super.onOptionsItemSelected(item);

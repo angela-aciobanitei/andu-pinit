@@ -1,20 +1,13 @@
 package com.ang.acb.personalpins.ui.boards;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.Resources;
-import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.ang.acb.personalpins.R;
 import com.ang.acb.personalpins.data.entity.Board;
-import com.ang.acb.personalpins.data.entity.Pin;
 import com.ang.acb.personalpins.data.repository.BoardRepository;
-import com.ang.acb.personalpins.utils.AbsentLiveData;
 import com.ang.acb.personalpins.utils.UiUtils;
 
 import java.util.List;
@@ -45,8 +38,8 @@ public class BoardsViewModel extends ViewModel {
     }
 
     public void createBoard(Context context, String title) {
-        // Set default board image with fixed image.
         boardRepository.insertBoard(new Board(title,
+                // Set default board image.
                 UiUtils.getImageResourceUri(context, R.drawable.board2).toString()));
     }
 

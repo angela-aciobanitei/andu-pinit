@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -23,8 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
-
-import static com.ang.acb.personalpins.ui.pins.PinDetailsFragment.ARG_PIN_ID;
 
 public class CommentsFragment extends Fragment {
 
@@ -41,7 +38,7 @@ public class CommentsFragment extends Fragment {
 
     @Override
     public void onAttach(@NotNull Context context) {
-        // When using Dagger for injecting Fragments, inject as early as possible.
+        // When using Dagger with Fragments, inject as early as possible.
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
     }
@@ -50,8 +47,9 @@ public class CommentsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Extract arguments sent via Safe Args.
         if (getArguments() != null) {
-            pinId = getArguments().getLong(ARG_PIN_ID);
+            pinId = CommentsFragmentArgs.fromBundle(getArguments()).getPinId();
         }
     }
 

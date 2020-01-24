@@ -2,14 +2,11 @@ package com.ang.acb.personalpins.ui.pins;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.ang.acb.personalpins.R;
-import com.ang.acb.personalpins.data.entity.Board;
 import com.ang.acb.personalpins.data.entity.Pin;
 import com.ang.acb.personalpins.data.repository.PinRepository;
-import com.ang.acb.personalpins.utils.AbsentLiveData;
 import com.ang.acb.personalpins.utils.SnackbarMessage;
 
 import java.util.List;

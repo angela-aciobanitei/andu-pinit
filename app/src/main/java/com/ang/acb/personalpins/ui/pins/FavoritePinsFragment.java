@@ -29,8 +29,6 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 
-import static com.ang.acb.personalpins.ui.pins.PinDetailsFragment.ARG_PIN_ID;
-import static com.ang.acb.personalpins.ui.pins.PinDetailsFragment.ARG_PIN_IS_PHOTO;
 
 public class FavoritePinsFragment extends Fragment {
 
@@ -84,23 +82,23 @@ public class FavoritePinsFragment extends Fragment {
 
     private void onPinClick(Pin pin, ImageView sharedImage) {
         // On item click navigate to pin details fragment
-        Bundle args = new Bundle();
-        args.putLong(ARG_PIN_ID, pin.getId());
+        FavoritePinsFragmentDirections.ActionFavoritePinsToPinDetails action =
+                FavoritePinsFragmentDirections.actionFavoritePinsToPinDetails();
+        action.setPinId(pin.getId());
         if (pin.getPhotoUri() != null && sharedImage != null) {
             // This is a photo pin
-            args.putBoolean(ARG_PIN_IS_PHOTO, true);
+            action.setIsPhoto(true);
             // Create the shared element transition extras.
             FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
                     .addSharedElement(sharedImage, sharedImage.getTransitionName())
                     .build();
             NavHostFragment.findNavController(FavoritePinsFragment.this)
-                    .navigate(R.id.action_favorite_pins_to_pin_details,
-                              args, null, extras);
+                    .navigate(action, extras);
         } else {
             // This is a video pin, there are no shared element transition extras.
-            args.putBoolean(ARG_PIN_IS_PHOTO, false);
+            action.setIsPhoto(false);
             NavHostFragment.findNavController(FavoritePinsFragment.this)
-                    .navigate(R.id.action_favorite_pins_to_pin_details, args);
+                    .navigate(action);
         }
     }
 

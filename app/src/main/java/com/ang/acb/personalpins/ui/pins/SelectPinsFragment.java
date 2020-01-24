@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.util.LongSparseArray;
@@ -33,7 +32,6 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 
-import static com.ang.acb.personalpins.ui.boards.BoardsFragment.ARG_BOARD_ID;
 
 public class SelectPinsFragment extends Fragment {
 
@@ -60,8 +58,9 @@ public class SelectPinsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Extract arguments sent via Safe Args.
         if (getArguments() != null) {
-            boardId = getArguments().getLong(ARG_BOARD_ID);
+            boardId = SelectPinsFragmentArgs.fromBundle(getArguments()).getBoardId();
         }
     }
 

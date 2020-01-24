@@ -28,8 +28,6 @@ import java.io.IOException;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
-import static com.ang.acb.personalpins.ui.pins.PinEditFragment.ARG_PIN_IS_VIDEO;
-import static com.ang.acb.personalpins.ui.pins.PinEditFragment.ARG_PIN_URI;
 
 
 public class CreatePinDialog extends DialogFragment {
@@ -42,7 +40,7 @@ public class CreatePinDialog extends DialogFragment {
     private static final int MEDIA_TYPE_VIDEO = 201;
 
     private Uri pinUri;
-    private boolean isVideo;
+    private boolean isPhoto;
     private Button takePhotoBtn;
     private Button pickPhotoBtn;
     private Button recordVideoBtn;
@@ -67,10 +65,10 @@ public class CreatePinDialog extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        takePhotoBtn.setOnClickListener(takePhoto -> takePhoto());
-        pickPhotoBtn.setOnClickListener(pickPhoto -> pickPhoto());
-        pickVideoBtn.setOnClickListener(pickVideo -> pickVideo());
-        recordVideoBtn.setOnClickListener(recordVideo -> recordVideo());
+        takePhotoBtn.setOnClickListener(takePhotoView -> takePhoto());
+        pickPhotoBtn.setOnClickListener(pickPhotoView -> pickPhoto());
+        pickVideoBtn.setOnClickListener(pickVideoView -> pickVideo());
+        recordVideoBtn.setOnClickListener(recordVideoView -> recordVideo());
     }
 
     private void pickPhoto() {
@@ -99,7 +97,7 @@ public class CreatePinDialog extends DialogFragment {
     }
 
     private void recordVideo() {
-        // See:  https://developer.android.com/training/camera/videobasics
+        // See: https://developer.android.com/training/camera/videobasics
         pinUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, pinUri);
@@ -133,14 +131,16 @@ public class CreatePinDialog extends DialogFragment {
                 mediaFile = File.createTempFile(filePrefix, fileSuffix, mediaStorageDir);
                 Timber.d( "Media File: %s" , Uri.fromFile(mediaFile));
             } catch (IOException e){
-                Timber.d("Error creating file: " +
-                        mediaStorageDir.getAbsolutePath() + filePrefix + fileSuffix);
+                String path = mediaStorageDir.getAbsolutePath() + filePrefix + fileSuffix;
+                Timber.d("Error creating file: " + path);
             }
 
             // Generate the Content URI for a File
             // See: https://developer.android.com/reference/androidx/core/content/FileProvider#GetUri
-            uri = FileProvider.getUriForFile(getHostActivity(),
-                    "com.ang.acb.personalpins.fileprovider" , mediaFile);
+            uri = FileProvider.getUriForFile(
+                    getHostActivity(),
+                    "com.ang.acb.personalpins.fileprovider" ,
+                    mediaFile);
             Timber.d("File content Uri: %s", uri);
         }
 
@@ -159,20 +159,20 @@ public class CreatePinDialog extends DialogFragment {
         if(resultCode == RESULT_OK){
             switch (requestCode) {
                 case REQUEST_TAKE_PHOTO:
-                    isVideo = false;
+                    isPhoto = true;
                     navigateToPinEditFragment();
                     break;
                 case REQUEST_PICK_PHOTO:
-                    isVideo = false;
+                    isPhoto = true;
                     if (data != null) pinUri = data.getData();
                     navigateToPinEditFragment();
                     break;
                 case REQUEST_TAKE_VIDEO:
-                    isVideo = true;
+                    isPhoto = false;
                     navigateToPinEditFragment();
                     break;
                 case REQUEST_PICK_VIDEO:
-                    isVideo = true;
+                    isPhoto = false;
                     if (data != null) pinUri = data.getData();
                     navigateToPinEditFragment();
                     break;
@@ -181,12 +181,11 @@ public class CreatePinDialog extends DialogFragment {
     }
 
     private void navigateToPinEditFragment() {
-        String pinUriString = pinUri.toString();
-        Bundle args = new Bundle();
-        args.putString(ARG_PIN_URI, pinUriString);
-        args.putBoolean(ARG_PIN_IS_VIDEO, isVideo);
-        NavHostFragment.findNavController(CreatePinDialog.this)
-                .navigate(R.id.action_create_pin_dialog_to_pin_edit, args);
+        CreatePinDialogDirections.ActionCreatePinDialogToPinEdit action =
+                CreatePinDialogDirections.actionCreatePinDialogToPinEdit();
+        action.setPinUriString(pinUri.toString());
+        action.setIsPhoto(isPhoto);
+        NavHostFragment.findNavController(this).navigate(action);
     }
 
     private MainActivity getHostActivity(){

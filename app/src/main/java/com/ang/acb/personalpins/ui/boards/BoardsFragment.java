@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -34,8 +33,6 @@ import dagger.android.support.AndroidSupportInjection;
 
 public class BoardsFragment extends Fragment {
 
-    public static final String ARG_BOARD_ID = "ARG_BOARD_ID";
-
     private FragmentBoardsBinding binding;
     private BoardsAdapter boardsAdapter;
     private BoardsViewModel boardsViewModel;
@@ -48,8 +45,8 @@ public class BoardsFragment extends Fragment {
 
     @Override
     public void onAttach(@NotNull Context context) {
-        // Note: when using Dagger for injecting Fragment objects, inject as early
-        // as possible. For this reason, call AndroidInjection.inject() in onAttach().
+        // When using Dagger for injecting Fragment objects, inject as early
+        // as possible. For this reason, you should call inject() in onAttach().
         // This also prevents inconsistencies if the Fragment is reattached.
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
@@ -58,7 +55,7 @@ public class BoardsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment.
+        // Inflate the layout for this fragment and get an instance of the binding class.
         binding = FragmentBoardsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -74,10 +71,6 @@ public class BoardsFragment extends Fragment {
     }
 
     private void initViewModel() {
-        // ViewModelProviders.of() has been deprecated. You can pass a Fragment or
-        // FragmentActivity to the new ViewModelProvider(ViewModelStoreOwner) constructor
-        // to achieve the same functionality.
-        // See: https://developer.android.com/jetpack/androidx/releases/lifecycle#2.2.0-alpha03
         boardsViewModel = new ViewModelProvider(getHostActivity(), viewModelFactory)
                 .get(BoardsViewModel.class);
     }
@@ -93,11 +86,13 @@ public class BoardsFragment extends Fragment {
     }
 
     private void onBoardClick(Board board) {
-        // On item click navigate to board details fragment
-        Bundle args = new Bundle();
-        args.putLong(ARG_BOARD_ID, board.getId());
-        NavHostFragment.findNavController(BoardsFragment.this)
-                .navigate(R.id.action_board_list_to_board_details, args);
+        // On board click navigate to board details fragment
+        // and pass the board ID via Safe Args.
+        BoardsFragmentDirections.ActionBoardListToBoardDetails action =
+                BoardsFragmentDirections.actionBoardListToBoardDetails();
+        action.setBoardId(board.getId());
+        action.setBoardTitle(board.getTitle());
+        NavHostFragment.findNavController(this).navigate(action);
     }
 
     private void populateUi() {
@@ -131,6 +126,7 @@ public class BoardsFragment extends Fragment {
         final EditText editText = dialogView.findViewById(R.id.dialog_new_edit_text);
         editText.setHint(R.string.board_name);
 
+        // Handle buttons' click events
         Button saveButton = dialogView.findViewById(R.id.dialog_new_save_btn);
         saveButton.setOnClickListener(view -> {
             String input = editText.getText().toString();
