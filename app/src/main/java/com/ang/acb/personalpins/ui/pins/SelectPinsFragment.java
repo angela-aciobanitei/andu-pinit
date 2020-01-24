@@ -19,9 +19,9 @@ import android.view.ViewGroup;
 import com.ang.acb.personalpins.R;
 import com.ang.acb.personalpins.data.entity.Pin;
 import com.ang.acb.personalpins.databinding.FragmentPinSelectBinding;
-import com.ang.acb.personalpins.ui.boards.BoardDetailsViewModel;
 import com.ang.acb.personalpins.ui.common.MainActivity;
 import com.ang.acb.personalpins.utils.GridMarginDecoration;
+import com.ang.acb.personalpins.ui.pins.SelectPinsAdapter.PinSelectCallback;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,9 +36,9 @@ import dagger.android.support.AndroidSupportInjection;
 public class SelectPinsFragment extends Fragment {
 
     private FragmentPinSelectBinding binding;
-    private PinsViewModel pinsViewModel;
-    private BoardDetailsViewModel boardDetailsViewModel;
+    private SelectPinsViewModel selectPinsViewModel;
     private SelectPinsAdapter selectPinsAdapter;
+    private PinSelectCallback pinSelectCallback;
     private long boardId;
 
     @Inject
@@ -76,34 +76,36 @@ public class SelectPinsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initViewModels();
+        initViewModel();
+        initListener();
         initAdapter();
         populateUi();
     }
 
-    private void initViewModels() {
-        pinsViewModel = new ViewModelProvider(this, viewModelFactory)
-                .get(PinsViewModel.class);
-        boardDetailsViewModel = new ViewModelProvider(this, viewModelFactory)
-                .get(BoardDetailsViewModel.class);
-        boardDetailsViewModel.setBoardId(boardId);
+    private void initViewModel() {
+        selectPinsViewModel = new ViewModelProvider(this, viewModelFactory)
+                .get(SelectPinsViewModel.class);
+        selectPinsViewModel.setBoardId(boardId);
     }
 
-    private void initAdapter() {
-        selectPinsAdapter = new SelectPinsAdapter(new SelectPinsAdapter.PinSelectCallback() {
+    private void initListener() {
+        pinSelectCallback = new PinSelectCallback() {
             @Override
             public void onPinChecked(Pin pin) {
                 // Save the result into the database and show a snackbar message.
-                pinsViewModel.onPinChecked(boardId, pin.getId());
+                selectPinsViewModel.onPinChecked(boardId, pin.getId());
             }
 
             @Override
             public void onPinUnchecked(Pin pin) {
                 // Delete item from the database and show a snackbar message.
-                pinsViewModel.onPinUnchecked(boardId, pin.getId());
+                selectPinsViewModel.onPinUnchecked(boardId, pin.getId());
             }
-        });
+        };
+    }
 
+    private void initAdapter() {
+        selectPinsAdapter = new SelectPinsAdapter(pinSelectCallback);
         binding.allPins.rv.setLayoutManager(new GridLayoutManager(
                 getHostActivity(), getResources().getInteger(R.integer.columns_count)));
         binding.allPins.rv.addItemDecoration(new GridMarginDecoration(
@@ -113,7 +115,7 @@ public class SelectPinsFragment extends Fragment {
 
     private void populateUi() {
         // Get all existing pins from the database.
-        pinsViewModel.getAllPins().observe(getViewLifecycleOwner(), allPins -> {
+        selectPinsViewModel.getAllPins().observe(getViewLifecycleOwner(), allPins -> {
             int allPinsCount = (allPins == null) ? 0 : allPins.size();
             binding.setAllPinsCount(allPinsCount);
 
@@ -121,7 +123,7 @@ public class SelectPinsFragment extends Fragment {
                 binding.allPinsEmptyState.tv.setText(R.string.no_pins);
             } else {
                 // Get pins associated with this particular board.
-                boardDetailsViewModel.getPinsForBoard().observe(getViewLifecycleOwner(), boardPins -> {
+                selectPinsViewModel.getPinsForBoard().observe(getViewLifecycleOwner(), boardPins -> {
                     if (boardPins != null) {
                         selectPinsAdapter.updateData(allPins, getPinStates(allPins, boardPins));
                         binding.executePendingBindings();
@@ -131,7 +133,7 @@ public class SelectPinsFragment extends Fragment {
         });
 
         // Observe the Snackbar messages displayed when adding/removing pin to/from board.
-        pinsViewModel.getSnackbarMessage().observe(getViewLifecycleOwner(), (Observer<Integer>) message ->
+        selectPinsViewModel.getSnackbarMessage().observe(getViewLifecycleOwner(), (Observer<Integer>) message ->
                 Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_SHORT).show());
     }
 

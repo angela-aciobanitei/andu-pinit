@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.FragmentNavigator;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -21,6 +20,7 @@ import android.widget.ImageView;
 import com.ang.acb.personalpins.R;
 import com.ang.acb.personalpins.data.entity.Pin;
 import com.ang.acb.personalpins.databinding.FragmentFavoritePinsBinding;
+import com.ang.acb.personalpins.ui.common.MainActivity;
 import com.ang.acb.personalpins.utils.GridMarginDecoration;
 
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +33,7 @@ import dagger.android.support.AndroidSupportInjection;
 public class FavoritePinsFragment extends Fragment {
 
     private FragmentFavoritePinsBinding binding;
-    private PinsViewModel pinsViewModel;
+    private FavoritePinsViewModel favoritePinsViewModel;
     private PinsAdapter pinsAdapter;
 
     @Inject
@@ -67,43 +67,41 @@ public class FavoritePinsFragment extends Fragment {
     }
 
     private void initViewModel() {
-        pinsViewModel = new ViewModelProvider(this, viewModelFactory)
-                .get(PinsViewModel.class);
+        favoritePinsViewModel = new ViewModelProvider(this, viewModelFactory)
+                .get(FavoritePinsViewModel.class);
     }
 
     private void initAdapter() {
         pinsAdapter = new PinsAdapter(this::onPinClick);
         binding.favorites.rv.setLayoutManager(new GridLayoutManager(
-                getContext(), getResources().getInteger(R.integer.columns_count)));
+                getHostActivity(), getResources().getInteger(R.integer.columns_count)));
         binding.favorites.rv.addItemDecoration(new GridMarginDecoration(
-                getContext(), R.dimen.grid_item_spacing));
+                getHostActivity(), R.dimen.grid_item_spacing));
         binding.favorites.rv.setAdapter(pinsAdapter);
     }
 
     private void onPinClick(Pin pin, ImageView sharedImage) {
-        // On item click navigate to pin details fragment
+        // On pin click navigate to pin details fragment.
         FavoritePinsFragmentDirections.ActionFavoritePinsToPinDetails action =
                 FavoritePinsFragmentDirections.actionFavoritePinsToPinDetails();
         action.setPinId(pin.getId());
         if (pin.getPhotoUri() != null && sharedImage != null) {
-            // This is a photo pin
+            // This is a photo pin.
             action.setIsPhoto(true);
             // Create the shared element transition extras.
             FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
                     .addSharedElement(sharedImage, sharedImage.getTransitionName())
                     .build();
-            NavHostFragment.findNavController(FavoritePinsFragment.this)
-                    .navigate(action, extras);
+            NavHostFragment.findNavController(this).navigate(action, extras);
         } else {
             // This is a video pin, there are no shared element transition extras.
             action.setIsPhoto(false);
-            NavHostFragment.findNavController(FavoritePinsFragment.this)
-                    .navigate(action);
+            NavHostFragment.findNavController(this).navigate(action);
         }
     }
 
     private void populateUi() {
-        pinsViewModel.getAllFavoritePins().observe(getViewLifecycleOwner(), pins -> {
+        favoritePinsViewModel.getFavoritePins().observe(getViewLifecycleOwner(), pins -> {
             int favoritesCount = (pins == null) ? 0 : pins.size();
             binding.setFavoritesCount(favoritesCount);
 
@@ -112,5 +110,9 @@ public class FavoritePinsFragment extends Fragment {
 
             binding.executePendingBindings();
         });
+    }
+
+    private MainActivity getHostActivity(){
+        return  (MainActivity) getActivity();
     }
 }

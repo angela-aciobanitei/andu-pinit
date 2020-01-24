@@ -10,7 +10,6 @@ import com.ang.acb.personalpins.data.entity.Comment;
 import com.ang.acb.personalpins.data.entity.Pin;
 import com.ang.acb.personalpins.data.entity.Tag;
 import com.ang.acb.personalpins.data.repository.PinRepository;
-import com.ang.acb.personalpins.utils.AbsentLiveData;
 import com.ang.acb.personalpins.utils.SnackbarMessage;
 
 import java.util.List;
@@ -28,10 +27,10 @@ public class PinDetailsViewModel extends ViewModel {
 
     private PinRepository pinRepository;
     private final MutableLiveData<Long> pinId = new MutableLiveData<>();
+    private final SnackbarMessage snackbarMessage = new SnackbarMessage();
     private LiveData<List<Tag>> pinTags;
     private LiveData<List<Comment>> pinComments;
     private LiveData<Pin> pin;
-    private final SnackbarMessage snackbarMessage = new SnackbarMessage();
 
     @Inject
     public PinDetailsViewModel(PinRepository pinRepository) {
@@ -44,30 +43,21 @@ public class PinDetailsViewModel extends ViewModel {
 
     public LiveData<Pin> getPin() {
         if (pin == null) {
-            pin = Transformations.switchMap(pinId, id -> {
-                if (id == null) return AbsentLiveData.create();
-                else return pinRepository.getPinById(id);
-            });
+            pin = Transformations.switchMap(pinId, id -> pinRepository.getPinById(id));
         }
         return  pin;
     }
 
     public LiveData<List<Tag>> getPinTags() {
         if (pinTags == null) {
-            pinTags = Transformations.switchMap(pinId, id -> {
-                if (id == null) return AbsentLiveData.create();
-                else return pinRepository.getTagsForPin(id);
-            });
+            pinTags = Transformations.switchMap(pinId, id -> pinRepository.getTagsForPin(id));
         }
         return  pinTags;
     }
 
     public LiveData<List<Comment>> getPinComments() {
         if (pinComments == null) {
-            pinComments = Transformations.switchMap(pinId, id -> {
-                if (id == null) return AbsentLiveData.create();
-                else return pinRepository.getCommentsForPin(id);
-            });
+            pinComments = Transformations.switchMap(pinId, id -> pinRepository.getCommentsForPin(id));
         }
         return  pinComments;
     }

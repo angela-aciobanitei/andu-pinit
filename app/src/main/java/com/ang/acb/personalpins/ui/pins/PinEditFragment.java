@@ -48,7 +48,7 @@ public class PinEditFragment extends Fragment {
     private static final String EXTRA_SHOULD_PLAY = "EXTRA_SHOULD_PLAY";
 
     private FragmentPinEditBinding binding;
-    private PinsViewModel pinsViewModel;
+    private PinEditViewModel pinEditViewModel;
     private String pinTitle;
     private Uri pinUri;
     private boolean isPhoto;
@@ -223,19 +223,18 @@ public class PinEditFragment extends Fragment {
     }
 
     private void initViewModel() {
-        pinsViewModel = new ViewModelProvider(this, viewModelFactory)
-                .get(PinsViewModel.class);
+        pinEditViewModel = new ViewModelProvider(this, viewModelFactory)
+                .get(PinEditViewModel.class);
     }
 
     private void handleSaveButton() {
         binding.pinEditSaveBtn.setOnClickListener(view -> {
             if (pinTitle != null && !pinTitle.isEmpty()) {
                 // Save result into the database.
-                if(!isPhoto) pinsViewModel.createPin(new Pin(
+                if(!isPhoto) pinEditViewModel.createPin(new Pin(
                             pinTitle, null, pinUri.toString(), false));
-                else pinsViewModel.createPin(new Pin(
+                else pinEditViewModel.createPin(new Pin(
                             pinTitle, pinUri.toString(), null, false));
-
                 // Navigate back to pin list fragment.
                 Navigation.findNavController(view).popBackStack(R.id.pins, false);
             } else {

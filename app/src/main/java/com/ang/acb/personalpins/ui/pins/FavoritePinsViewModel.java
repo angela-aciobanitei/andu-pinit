@@ -10,20 +10,20 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class PinsViewModel extends ViewModel {
+public class FavoritePinsViewModel extends ViewModel {
 
     private PinRepository pinRepository;
-    private LiveData<List<Pin>> allPins;
+    private LiveData<List<Pin>> favoritePins;
 
     @Inject
-    public PinsViewModel(PinRepository pinRepository) {
+    public FavoritePinsViewModel(PinRepository pinRepository) {
         this.pinRepository = pinRepository;
     }
 
-    public LiveData<List<Pin>> getAllPins() {
-        if (allPins == null) {
-            allPins = pinRepository.getAllPins();
+    public LiveData<List<Pin>> getFavoritePins() {
+        if (favoritePins == null) {
+            favoritePins = pinRepository.getAllFavoritePins();
         }
-        return allPins;
+        return favoritePins;
     }
 }
