@@ -172,7 +172,7 @@ public class BoardDetailsFragment extends Fragment {
                 new ComponentName(getHostActivity(), BoardWidgetProvider.class));
 
         appWidgetManager.notifyAppWidgetViewDataChanged(
-                appWidgetIds, R.id.widget_pin_list_items);
+                appWidgetIds, R.id.widget_board_pins_lv);
         BoardWidgetProvider.updateRecipeWidget(
                 getContext(), appWidgetManager, appWidgetIds);
     }

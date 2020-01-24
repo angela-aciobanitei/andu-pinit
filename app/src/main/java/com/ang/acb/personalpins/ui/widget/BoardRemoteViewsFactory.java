@@ -10,9 +10,7 @@ import com.ang.acb.personalpins.R;
 import com.ang.acb.personalpins.data.dao.BoardPinDao;
 import com.ang.acb.personalpins.data.entity.Pin;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -76,7 +74,7 @@ public class BoardRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
 
         // Set the remote views item text based on the position.
         remoteViews.setTextViewText(
-                R.id.widget_pin_item,
+                R.id.widget_pin_item_tv,
                 pins.get(position).getTitle());
 
         // When using collections (eg. ListView, StackView etc.) in widgets,
@@ -86,7 +84,7 @@ public class BoardRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         // individual items can differentiate their on-click behavior using
         // RemoteViews#setOnClickFillInIntent(int, Intent).
         // See: https://developer.android.com/guide/topics/appwidgets#setting-the-fill-in-intent
-        remoteViews.setOnClickFillInIntent(R.id.widget_pin_item, new Intent());
+        remoteViews.setOnClickFillInIntent(R.id.widget_pin_item_tv, new Intent());
 
         return remoteViews;
     }
