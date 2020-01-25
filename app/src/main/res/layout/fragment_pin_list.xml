@@ -21,6 +21,5 @@
             android:id="@+id/all_pins"
             layout="@layout/content_items"
             app:dataCount="@{allPinsCount}"/>
-
     </LinearLayout>
 </layout>

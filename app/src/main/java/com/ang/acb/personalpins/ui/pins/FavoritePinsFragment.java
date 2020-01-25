@@ -22,6 +22,9 @@ import com.ang.acb.personalpins.data.entity.Pin;
 import com.ang.acb.personalpins.databinding.FragmentFavoritePinsBinding;
 import com.ang.acb.personalpins.ui.common.MainActivity;
 import com.ang.acb.personalpins.utils.GridMarginDecoration;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -64,6 +67,7 @@ public class FavoritePinsFragment extends Fragment {
         initViewModel();
         initAdapter();
         populateUi();
+        setupBannerAd();
     }
 
     private void initViewModel() {
@@ -73,11 +77,11 @@ public class FavoritePinsFragment extends Fragment {
 
     private void initAdapter() {
         pinsAdapter = new PinsAdapter(this::onPinClick);
-        binding.favorites.rv.setLayoutManager(new GridLayoutManager(
+        binding.favoritesRv.setLayoutManager(new GridLayoutManager(
                 getHostActivity(), getResources().getInteger(R.integer.columns_count)));
-        binding.favorites.rv.addItemDecoration(new GridMarginDecoration(
+        binding.favoritesRv.addItemDecoration(new GridMarginDecoration(
                 getHostActivity(), R.dimen.grid_item_spacing));
-        binding.favorites.rv.setAdapter(pinsAdapter);
+        binding.favoritesRv.setAdapter(pinsAdapter);
     }
 
     private void onPinClick(Pin pin, ImageView sharedImage) {
@@ -106,10 +110,25 @@ public class FavoritePinsFragment extends Fragment {
             binding.setFavoritesCount(favoritesCount);
 
             if(favoritesCount != 0) pinsAdapter.submitList(pins);
-            else binding.favoritesEmptyState.tv.setText(R.string.no_favorites);
+            else binding.favoritesEmptyStateTv.setText(R.string.no_favorites);
 
             binding.executePendingBindings();
         });
+    }
+
+    private void setupBannerAd() {
+        // Initialize the Google Mobile Ads SDK.
+        // Note: RequiresPermission("android.permission.INTERNET")
+        MobileAds.initialize(getContext(), getString(R.string.ad_mob_app_id));
+
+        // Create an ad request. Check logcat output for the hashed device ID to get test
+        // ads on a physical device: "Use AdRequest.Builder.addTestDevice("ABCDEF012345")
+        // to get test ads on this device."
+        // https://developers.google.com/admob/android/test-ads#enable_test_devices
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        binding.adView.loadAd(adRequest);
     }
 
     private MainActivity getHostActivity(){
