@@ -229,7 +229,7 @@ public class PinEditFragment extends Fragment {
 
     private void handleSaveButton() {
         binding.pinEditSaveBtn.setOnClickListener(view -> {
-            if (pinTitle != null && !pinTitle.isEmpty()) {
+            if (pinTitle != null && pinTitle.trim().length() != 0) {
                 // Save result into the database.
                 if(!isPhoto) pinEditViewModel.createPin(new Pin(
                             pinTitle, null, pinUri.toString(), false));

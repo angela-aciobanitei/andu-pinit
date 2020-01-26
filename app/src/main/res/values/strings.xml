@@ -56,4 +56,8 @@
     <string name="pref_title_key">pref_title_key</string>
     <string name="create_widget">Create board widget</string>
     <string name="delete_board">Delete board</string>
+    <string name="update_board_cover">Update cover</string>
+    <string name="delete_pin_dialog_msg">Delete this pin?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

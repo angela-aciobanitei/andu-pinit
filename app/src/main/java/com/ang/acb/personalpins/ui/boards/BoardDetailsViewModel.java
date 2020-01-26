@@ -48,4 +48,8 @@ public class BoardDetailsViewModel extends ViewModel {
     public void deleteBoard(long boardId) {
         boardRepository.deleteBoard(boardId);
     }
+
+    public void updateBoardCover(String photoCoverUri, long boardId) {
+        boardRepository.updateBoardCover(photoCoverUri, boardId);
+    }
 }

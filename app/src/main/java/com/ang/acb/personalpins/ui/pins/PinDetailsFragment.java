@@ -3,6 +3,7 @@ package com.ang.acb.personalpins.ui.pins;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -48,6 +49,8 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
+
+import static androidx.navigation.fragment.NavHostFragment.findNavController;
 
 
 public class PinDetailsFragment extends Fragment {
@@ -116,9 +119,10 @@ public class PinDetailsFragment extends Fragment {
         observePin();
         observeTags();
         handleFavorite();
-        handleNewTag();
-        handleNewComment();
-        viewComments();
+        onNewTag();
+        onNewComment();
+        onDeletePin();
+        onViewComments();
     }
 
     @Override
@@ -277,15 +281,19 @@ public class PinDetailsFragment extends Fragment {
                     Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_SHORT).show());
     }
 
-    private void handleNewTag() {
-        binding.icAddTag.setOnClickListener(view -> createNewTagDialog());
+    private void onNewTag() {
+        binding.icAddTag.setOnClickListener(view -> showNewTagDialog());
     }
 
-    private void handleNewComment() {
-        binding.icAddComment.setOnClickListener(view -> createNewCommentDialog());
+    private void onNewComment() {
+        binding.icAddComment.setOnClickListener(view -> showNewCommentDialog());
     }
 
-    private void createNewTagDialog() {
+    private void onDeletePin() {
+        binding.icDeletePin.setOnClickListener(view -> showDeletePinDialog());
+    }
+
+    private void showNewTagDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         View dialogView = getHostActivity().getLayoutInflater()
                 .inflate(R.layout.create_new_dialog, null);
@@ -315,7 +323,7 @@ public class PinDetailsFragment extends Fragment {
         dialog.show();
     }
 
-    private void createNewCommentDialog() {
+    private void showNewCommentDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         View dialogView = getHostActivity().getLayoutInflater()
                 .inflate(R.layout.create_new_dialog, null);
@@ -345,13 +353,30 @@ public class PinDetailsFragment extends Fragment {
         dialog.show();
     }
 
-    private void viewComments() {
+    private void showDeletePinDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(R.string.delete_pin_dialog_msg);
+        builder.setPositiveButton(R.string.yes, (dialog, id) -> {
+            // Delete pin data from database.
+            pinDetailsViewModel.deletePin(pinId);
+            // Navigate back (Pop just the current destination off the stack).
+            findNavController(this).popBackStack();
+        });
+        builder.setNegativeButton(R.string.no, (dialog, id) -> {
+            if (dialog != null) dialog.dismiss();
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void onViewComments() {
         binding.viewCommentsTv.setOnClickListener(view -> {
             // Navigate to comments fragment and pass the pin ID via Safe Args.
             PinDetailsFragmentDirections.ActionPinDetailsToComments action =
                     PinDetailsFragmentDirections.actionPinDetailsToComments();
             action.setPinId(pinId);
-            NavHostFragment.findNavController(this).navigate(action);
+            findNavController(this).navigate(action);
         });
     }
 

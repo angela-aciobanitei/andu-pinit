@@ -86,4 +86,8 @@ public class PinDetailsViewModel extends ViewModel {
     public void createComment(long pinId, String comment) {
         pinRepository.insertComment(new Comment(pinId, comment));
     }
+
+    public void deletePin(long pinId) {
+        pinRepository.deletePin(pinId);
+    }
 }
