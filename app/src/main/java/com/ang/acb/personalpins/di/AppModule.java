@@ -10,6 +10,7 @@ import com.ang.acb.personalpins.data.dao.CommentDao;
 import com.ang.acb.personalpins.data.dao.PinDao;
 import com.ang.acb.personalpins.data.dao.TagDao;
 import com.ang.acb.personalpins.data.db.AppDatabase;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import javax.inject.Singleton;
 
@@ -55,5 +56,14 @@ class AppModule {
     @Provides
     BoardPinDao provideBoardPinDao(AppDatabase database) {
         return database.boardPinDao();
+    }
+
+    @Singleton
+    @Provides
+    FirebaseAnalytics provideFirebaseAnalytics(Application application) {
+        // https://medium.com/@cdmunoz/how-to-easily-integrate-firebase-analytics-into-your-android-app-8e7b8d69ab84
+        // https://medium.com/exploring-android/exploring-firebase-on-android-ios-analytics-8484b61a21ba
+        // Note: calling this method requiresINTERNET, ACCESS_NETWORK_STATE and WAKE_LOCK permissions.
+        return FirebaseAnalytics.getInstance(application.getApplicationContext());
     }
 }

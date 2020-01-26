@@ -25,6 +25,7 @@ import com.ang.acb.personalpins.databinding.FragmentBoardsBinding;
 import com.ang.acb.personalpins.ui.common.MainActivity;
 import com.ang.acb.personalpins.utils.GridMarginDecoration;
 import com.ang.acb.personalpins.utils.UiUtils;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,6 +41,9 @@ public class BoardsFragment extends Fragment {
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
+
+    @Inject
+    FirebaseAnalytics firebaseAnalytics;
 
     // Required empty public constructor
     public BoardsFragment() {}
@@ -94,6 +98,13 @@ public class BoardsFragment extends Fragment {
         action.setBoardId(board.getId());
         action.setBoardTitle(board.getTitle());
         NavHostFragment.findNavController(this).navigate(action);
+
+        // Log a SELECT_CONTENT event when user clicks on a specific board.
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, String.valueOf(board.getId()));
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, board.getTitle());
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "board");
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     private void populateUi() {
@@ -109,7 +120,9 @@ public class BoardsFragment extends Fragment {
     }
 
     private void handleNewBoardCreation() {
-        binding.newBoardButton.setOnClickListener(view -> showNewBoardDialog());
+        binding.newBoardButton.setOnClickListener(view -> {
+            showNewBoardDialog();
+        });
     }
 
     private void showNewBoardDialog() {

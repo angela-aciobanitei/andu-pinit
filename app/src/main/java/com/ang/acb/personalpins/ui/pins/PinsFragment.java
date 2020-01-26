@@ -23,6 +23,7 @@ import com.ang.acb.personalpins.data.entity.Pin;
 import com.ang.acb.personalpins.databinding.FragmentPinListBinding;
 import com.ang.acb.personalpins.ui.common.MainActivity;
 import com.ang.acb.personalpins.utils.GridMarginDecoration;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +40,9 @@ public class PinsFragment extends Fragment {
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
+
+    @Inject
+    FirebaseAnalytics firebaseAnalytics;
 
     // Required empty public constructor
     public PinsFragment() {}
@@ -100,6 +104,13 @@ public class PinsFragment extends Fragment {
             action.setIsPhoto(false);
             NavHostFragment.findNavController(this).navigate(action);
         }
+
+        // Log a SELECT_CONTENT event when user clicks on a specific pin.
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, String.valueOf(pin.getId()));
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, pin.getTitle());
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "pin");
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     private void populateUi() {
