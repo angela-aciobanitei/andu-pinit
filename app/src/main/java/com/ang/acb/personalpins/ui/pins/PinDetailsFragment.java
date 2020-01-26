@@ -41,6 +41,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -70,6 +71,9 @@ public class PinDetailsFragment extends Fragment {
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
+
+    @Inject
+    FirebaseAnalytics firebaseAnalytics;
 
     // Required empty public constructor
     public PinDetailsFragment() {}
@@ -272,8 +276,16 @@ public class PinDetailsFragment extends Fragment {
     }
 
     private void handleFavorite() {
-        binding.icAddToFavorite.setOnClickListener(view ->
-                pinDetailsViewModel.onFavoriteClicked());
+        binding.icAddToFavorite.setOnClickListener(view -> {
+            pinDetailsViewModel.onFavoriteClicked();
+
+            // Log a SELECT_CONTENT event when user clicks on favorite icon.
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, String.valueOf(pinId));
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "pin");
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "favorite");
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        });
 
         // Observe the Snackbar messages displayed when adding/removing pin to/from favorites.
         pinDetailsViewModel.getSnackbarMessage().observe(
