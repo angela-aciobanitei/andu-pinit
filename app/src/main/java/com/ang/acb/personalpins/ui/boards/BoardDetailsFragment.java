@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.FragmentNavigator;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -37,6 +38,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
+
+import static androidx.navigation.fragment.NavHostFragment.findNavController;
 
 
 public class BoardDetailsFragment extends Fragment {
@@ -120,11 +123,11 @@ public class BoardDetailsFragment extends Fragment {
             FragmentNavigator.Extras extras = new FragmentNavigator.Extras.Builder()
                     .addSharedElement(sharedImage, sharedImage.getTransitionName())
                     .build();
-            NavHostFragment.findNavController(this).navigate(action, extras);
+            findNavController(this).navigate(action, extras);
         } else {
             // This is a video pin, there are no shared element transition extras.
             action.setIsPhoto(false);
-            NavHostFragment.findNavController(this).navigate(action);
+            findNavController(this).navigate(action);
         }
     }
 
@@ -155,12 +158,34 @@ public class BoardDetailsFragment extends Fragment {
             BoardDetailsFragmentDirections.ActionBoardDetailsToSelectPins action =
                     BoardDetailsFragmentDirections.actionBoardDetailsToSelectPins();
             action.setBoardId(boardId);
-            NavHostFragment.findNavController(this).navigate(action);
+            findNavController(this).navigate(action);
         });
     }
 
     private MainActivity getHostActivity(){
         return  (MainActivity) getActivity();
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.board_details_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_create_widget:
+                addWidgetToHomeScreen(boardId, boardTitle);
+                return true;
+            case R.id.action_delete_board:
+                deleteBoard(boardId);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void addWidgetToHomeScreen(long boardId, String boardTitle) {
@@ -177,19 +202,9 @@ public class BoardDetailsFragment extends Fragment {
                 getContext(), appWidgetManager, appWidgetIds);
     }
 
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.board_details_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_create_widget) {
-            addWidgetToHomeScreen(boardId, boardTitle);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    private void deleteBoard(long boardId) {
+        boardDetailsViewModel.deleteBoard(boardId);
+        // Navigate back to pin list fragment.
+        findNavController(this).popBackStack(R.id.boards, false);
     }
 }

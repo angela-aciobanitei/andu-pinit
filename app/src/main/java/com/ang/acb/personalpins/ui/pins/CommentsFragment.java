@@ -77,10 +77,10 @@ public class CommentsFragment extends Fragment {
     }
 
     private void initAdapter() {
-        binding.rvComments.setLayoutManager(new LinearLayoutManager(
+        binding.comments.rv.setLayoutManager(new LinearLayoutManager(
                 getContext(), LinearLayoutManager.VERTICAL, false));
         commentsAdapter = new CommentsAdapter();
-        binding.rvComments.setAdapter(commentsAdapter);
+        binding.comments.rv.setAdapter(commentsAdapter);
     }
 
     private void observeComments() {
@@ -89,7 +89,7 @@ public class CommentsFragment extends Fragment {
             binding.setCommentsCount(commentsCount);
 
             if(commentsCount != 0) commentsAdapter.submitList(comments);
-            else binding.commentsEmptyState.tv.setText(R.string.no_comments);
+            else binding.comments.tv.setText(R.string.no_comments);
 
             binding.executePendingBindings();
         });

@@ -120,7 +120,7 @@ public class SelectPinsFragment extends Fragment {
             binding.setAllPinsCount(allPinsCount);
 
             if(allPins == null) {
-                binding.allPinsEmptyState.tv.setText(R.string.no_pins);
+                binding.allPins.tv.setText(R.string.no_pins);
             } else {
                 // Get pins associated with this particular board.
                 selectPinsViewModel.getPinsForBoard().observe(getViewLifecycleOwner(), boardPins -> {

@@ -24,6 +24,7 @@ import com.ang.acb.personalpins.data.entity.Board;
 import com.ang.acb.personalpins.databinding.FragmentBoardsBinding;
 import com.ang.acb.personalpins.ui.common.MainActivity;
 import com.ang.acb.personalpins.utils.GridMarginDecoration;
+import com.ang.acb.personalpins.utils.UiUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -129,9 +130,12 @@ public class BoardsFragment extends Fragment {
         // Handle buttons' click events
         Button saveButton = dialogView.findViewById(R.id.dialog_new_save_btn);
         saveButton.setOnClickListener(view -> {
-            String input = editText.getText().toString();
-            if (input.trim().length() != 0) {
-                boardsViewModel.createBoard(getContext(), input);
+            String boardTitle = editText.getText().toString();
+            if (boardTitle.trim().length() != 0) {
+                // Default board image.
+                String boardUri = UiUtils.getImageResourceUri(
+                        getHostActivity(), R.drawable.board_cover).toString();
+                boardsViewModel.createBoard(boardTitle, boardUri);
             }
             dialog.dismiss();
         });

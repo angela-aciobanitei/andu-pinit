@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/padding_small"
         android:paddingBottom="@dimen/padding_small"
-        android:drawableStart="@drawable/ic_account_circle"
+        android:drawableStart="@drawable/ic_comment"
         android:drawablePadding="@dimen/padding_small"
         android:drawableTint="@color/colorAccent"
         android:text="@{comment.text}"

@@ -44,4 +44,8 @@ public class BoardDetailsViewModel extends ViewModel {
         }
         return  pins;
     }
+
+    public void deleteBoard(long boardId) {
+        boardRepository.deleteBoard(boardId);
+    }
 }
