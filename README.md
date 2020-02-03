@@ -2,8 +2,6 @@
 
 A personal Pinterest-style app that allows users to record photos or videos and store them in collections.
 
-
-
 ## Libraries
 *   [Room](https://developer.android.com/topic/libraries/architecture/room) for data persistence.
 *   [Glide](https://github.com/bumptech/glide) for image loading.
