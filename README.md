@@ -1,5 +1,7 @@
 ## Pin It
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f9e52872416b435d9ab208709eaee226)](https://app.codacy.com/manual/angela-aciobanitei/andu-pinit?utm_source=github.com&utm_medium=referral&utm_content=angela-aciobanitei/andu-pinit&utm_campaign=Badge_Grade_Settings)
+
 A personal Pinterest-style app that allows users to record photos or videos and store them in collections.
 
 ## Libraries
