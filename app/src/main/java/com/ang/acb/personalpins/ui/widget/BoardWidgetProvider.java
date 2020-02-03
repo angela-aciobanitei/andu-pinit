@@ -9,13 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
-import androidx.core.app.TaskStackBuilder;
-import androidx.navigation.NavController;
 import androidx.navigation.NavDeepLinkBuilder;
 
 import com.ang.acb.personalpins.R;
-import com.ang.acb.personalpins.ui.boards.BoardDetailsFragmentArgs;
-import com.ang.acb.personalpins.ui.common.MainActivity;
 
 
 /**
@@ -27,8 +23,6 @@ import com.ang.acb.personalpins.ui.common.MainActivity;
  * See: https://developer.android.com/guide/topics/appwidgets#AppWidgetProvider
  */
 public class BoardWidgetProvider extends AppWidgetProvider {
-
-    private static final int REQUEST_CODE_MAIN_PENDING_INTENT = 100;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {

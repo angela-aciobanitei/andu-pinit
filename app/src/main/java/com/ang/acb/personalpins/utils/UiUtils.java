@@ -4,10 +4,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.view.View;
-import android.view.ViewTreeObserver;
-
-import androidx.fragment.app.Fragment;
 
 public class UiUtils {
 

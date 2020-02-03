@@ -1,14 +1,10 @@
 package com.ang.acb.personalpins.ui.boards;
 
-import android.content.Context;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.ang.acb.personalpins.R;
 import com.ang.acb.personalpins.data.entity.Board;
 import com.ang.acb.personalpins.data.repository.BoardRepository;
-import com.ang.acb.personalpins.utils.UiUtils;
 
 import java.util.List;
 
